@@ -4,8 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+
 import modelo.ImageProcessing;
 
 /**
@@ -69,8 +68,6 @@ public class MainFrame extends JFrame {
         menuArchivo.setFont(new Font("Arial", Font.BOLD, 14));
         menuProcesar.setFont(new Font("Arial", Font.BOLD, 14));
         menuBrilloContraste.setFont(new Font("Arial", Font.BOLD, 14));
-
-        menuItemBrillo.addActionListener(v -> System.out.println(history.toString()));
         
         menuItemCargar.addActionListener(e -> {
             ImageProcessing.chargeImage(history);
@@ -172,15 +169,101 @@ public class MainFrame extends JFrame {
                 });
                 
             }
-        });        
+        }); 
         
-     // Descomentar cuando se implementen los métodos de procesamiento de imágenes
-         //menuItemExtraerRojo.addActionListener(e -> ImageProcessing.redScale());
-         //menuItemExtraerVerde.addActionListener(e -> ImageProcessing.greenScale());
-         //menuItemExtraerAzul.addActionListener(e -> ImageProcessing.blueScale());
-         //menuItemEscalaGrises.addActionListener(e -> ImageProcessing.grayScale());
-         //menuItemBrillo.addActionListener(e -> ImageProcessing.brightness());
-         //menuItemContraste.addActionListener(e -> ImageProcessing.contrast());
+        menuItemEscalaGrises.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent v) {
+                if (apuntador == null) {
+                    JOptionPane.showMessageDialog(
+                        null,
+                        "Seleccione una imagen.",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE
+                    );
+                } else {
+                    ImageProcessing.grayScale(apuntador.getFilledImage().getBufferedImagen(), history);
+                    System.out.println(history.toString());
+                }
+                
+                history.getUltimo().getBoton().addActionListener(new ActionListener() {
+                    JButton ans = history.getUltimo().getBoton();
+                
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                    apuntador=history.get(history.getIndiceFromButton(ans)); 
+                    String cadena=apuntador.toString();
+                    System.out.println(cadena);
+                    }
+                });
+                
+            }
+        }); 
+        
+        menuItemBrillo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent v) {
+                if (apuntador == null) {
+                    JOptionPane.showMessageDialog(
+                        null,
+                        "Seleccione una imagen.",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE
+                    );
+                } else {
+                	BrightnessFrame brillo = new BrightnessFrame(apuntador.getFilledImage().getBufferedImagen());
+                	if(brillo.getProceso()==0) {
+                        ImageProcessing.brightness(brillo.getSlider().getValue(), apuntador.getFilledImage().getBufferedImagen(), history);
+                        System.out.println(history.toString());
+                	}
+                }
+                
+                history.getUltimo().getBoton().addActionListener(new ActionListener() {
+                    JButton ans = history.getUltimo().getBoton();
+                
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                    apuntador=history.get(history.getIndiceFromButton(ans)); 
+                    String cadena=apuntador.toString();
+                    System.out.println(cadena);
+                    }
+                });
+
+            }
+        });    
+        
+        menuItemContraste.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent v) {
+                if (apuntador == null) {
+                    JOptionPane.showMessageDialog(
+                        null,
+                        "Seleccione una imagen.",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE
+                    );
+                } else {
+                	ContrastFrame brillo = new ContrastFrame(apuntador.getFilledImage().getBufferedImagen());
+                	if(brillo.getProceso()==0) {
+                        ImageProcessing.contrast(brillo.getSlider().getValue(), apuntador.getFilledImage().getBufferedImagen(), history);
+                        System.out.println(history.toString());
+                	}
+                }
+                
+                history.getUltimo().getBoton().addActionListener(new ActionListener() {
+                    JButton ans = history.getUltimo().getBoton();
+                
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                    apuntador=history.get(history.getIndiceFromButton(ans)); 
+                    String cadena=apuntador.toString();
+                    System.out.println(cadena);
+                    }
+                });
+
+            }
+        });
+
     }
 
 }

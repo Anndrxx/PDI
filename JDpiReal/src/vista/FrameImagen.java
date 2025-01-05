@@ -41,14 +41,11 @@ public class FrameImagen extends JFrame {
         int alto = imagenCargada.getImagen().getHeight(null);
         setTitle("Visor de imagen " + ancho + " x " + alto + " pixeles.");
         initComponents(imagenCargada.getImagen());
-        
-        FrameImagen frameCopia = this;
-        
+                
         this.addWindowListener(new WindowAdapter() {
-            FrameImagen frameCopiaAuxiliar = frameCopia;
             @Override
             public void windowClosing(WindowEvent e) {
-                setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+                setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 System.out.println("Cerrada");
                 history.elimina(history.get(history.getIndiceFromButton(boton)));
             }
@@ -74,6 +71,15 @@ public class FrameImagen extends JFrame {
         int ancho = imagenProcesada.getImagen().getWidth(null);
         int alto = imagenProcesada.getImagen().getHeight(null);
         setTitle("Visor de imagen " + ancho + " x " + alto + " pixeles.");
+        
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                System.out.println("Cerrada");
+                history.elimina(history.get(history.getIndiceFromButton(boton)));
+            }
+        });
         initComponents(imagenProcesada.getImagen());
     }
     

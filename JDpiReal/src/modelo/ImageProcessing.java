@@ -1,16 +1,200 @@
 package modelo;
 
-import java.awt.Color;
 import java.awt.image.BufferedImage;
-import vista.ImageFrameHistory;
-import vista.FrameImagen;
+import java.awt.*;
+import vista.*;
+
 /**
  *
  * @author André García Carrizoza
  */
 
 public class ImageProcessing {
-    
+	
+	public static BufferedImage contrastAuxiliar(int contrast, BufferedImage input){
+        int alto = input.getHeight();
+        int ancho = input.getWidth();
+        int pixel;
+        
+        int [][] imagenInt = new int[alto][ancho];
+        
+        for(int y=0; y<alto;y++){
+            for(int x=0;x<ancho;x++){
+                pixel=input.getRGB(x, y);
+                double rojo  = (pixel & 0x00ff0000) >> 16;
+                double verde = (pixel & 0x0000ff00) >> 8;
+                double azul  =  pixel & 0x000000ff;
+                
+               double ans = contrast/5;
+                
+                rojo = rojo*ans;
+                if(rojo>255){
+                    rojo=255;
+                }else if(rojo<0){
+                    rojo=0;
+                }
+                verde = verde*ans;
+                if(verde>255){
+                    verde=255;
+                }else if(verde<0){
+                    verde=0;
+                }
+                azul = azul*ans;
+                if(azul>255){
+                    azul=255;
+                }else if(azul<0){
+                    azul=0;
+                }
+                
+                Color color = new Color((int)rojo, (int)verde, (int)azul);
+                imagenInt[y][x] = color.getRGB();
+                    
+            }
+        }
+        
+        BufferedImage bufferedImage=convertirMatrizABuffered(imagenInt);
+        return bufferedImage;
+    }    
+	
+	
+    public static void contrast(int contrast, BufferedImage input, ImageFrameHistory history){
+        int alto = input.getHeight();
+        int ancho = input.getWidth();
+        int pixel;
+        
+        int [][] imagenInt = new int[alto][ancho];
+        
+        for(int y=0; y<alto;y++){
+            for(int x=0;x<ancho;x++){
+                pixel=input.getRGB(x, y);
+                int rojo  = (pixel & 0x00ff0000) >> 16;
+                int verde = (pixel & 0x0000ff00) >> 8;
+                int azul  =  pixel & 0x000000ff;
+                
+                rojo = (rojo * contrast);
+                if(rojo>255){
+                    rojo=255;
+                }else if(rojo<0){
+                    rojo=0;
+                }
+                verde = (verde * contrast);
+                if(verde>255){
+                    verde=255;
+                }else if(verde<0){
+                    verde=0;
+                }
+                azul = (azul * contrast);
+                if(azul>255){
+                    azul=255;
+                }else if(azul<0){
+                    azul=0;
+                }
+                
+                Color color = new Color(rojo, verde, azul);
+                imagenInt[y][x] = color.getRGB();
+                    
+            }
+        }
+        boolean[] flag = {true};
+        BufferedImage bufferedImage=convertirMatrizABuffered(imagenInt);
+        FrameImagen frame = new FrameImagen(bufferedImage, history, flag);
+                
+        if(flag[0]){
+            history.agregaFinal(frame);
+        }
+    }    
+	
+	public static BufferedImage brightnessAuxiliar(int brightness, BufferedImage input) {
+		int alto = input.getHeight();
+        int ancho = input.getWidth();
+        int pixel;
+        
+        int [][] imagenInt = new int[alto][ancho];
+        
+        for(int y=0; y<alto;y++){
+            for(int x=0;x<ancho;x++){
+                pixel=input.getRGB(x, y);
+                int rojo  = (pixel & 0x00ff0000) >> 16;
+                int verde = (pixel & 0x0000ff00) >> 8;
+                int azul  =  pixel & 0x000000ff;
+                
+                rojo = (rojo + brightness);
+                if(rojo>255){
+                    rojo=255;
+                }else if(rojo<0){
+                    rojo=0;
+                }
+                verde = (verde + brightness);
+                if(verde>255){
+                    verde=255;
+                }else if(verde<0){
+                    verde=0;
+                }
+                azul = (azul + brightness);
+                if(azul>255){
+                    azul=255;
+                }else if(azul<0){
+                    azul=0;
+                }
+                
+                Color color = new Color(rojo, verde, azul);
+                imagenInt[y][x] = color.getRGB();
+                    
+            }
+        }
+        
+        BufferedImage bufferedImage=convertirMatrizABuffered(imagenInt);
+        return bufferedImage;
+    }
+	
+    public static void brightness(int brightness, BufferedImage input, ImageFrameHistory history){
+        int alto = input.getHeight();
+        int ancho = input.getWidth();
+        int pixel;
+        
+        int [][] imagenInt = new int[alto][ancho];
+        
+        for(int y=0; y<alto;y++){
+            for(int x=0;x<ancho;x++){
+                pixel=input.getRGB(x, y);
+                int rojo  = (pixel & 0x00ff0000) >> 16;
+                int verde = (pixel & 0x0000ff00) >> 8;
+                int azul  =  pixel & 0x000000ff;
+                
+                rojo = (rojo + brightness);
+                if(rojo>255){
+                    rojo=255;
+                }else if(rojo<0){
+                    rojo=0;
+                }
+                verde = (verde + brightness);
+                if(verde>255){
+                    verde=255;
+                }else if(verde<0){
+                    verde=0;
+                }
+                azul = (azul + brightness);
+                if(azul>255){
+                    azul=255;
+                }else if(azul<0){
+                    azul=0;
+                }
+                
+                Color color = new Color(rojo, verde, azul);
+                imagenInt[y][x] = color.getRGB();
+                    
+            }
+        }
+        
+        boolean[] flag = {true};
+        BufferedImage bufferedImage=convertirMatrizABuffered(imagenInt);
+        FrameImagen frame = new FrameImagen(bufferedImage, history, flag);
+                
+        if(flag[0]){
+            history.agregaFinal(frame);
+        }
+    }  
+	
     public static void blueScale(BufferedImage input, ImageFrameHistory history){
         int alto = input.getHeight();
         int ancho = input.getWidth();
@@ -106,95 +290,7 @@ public class ImageProcessing {
         }
     }
     
-    public static ExtendedImage contrast(int contrast, BufferedImage input){
-        int alto = input.getHeight();
-        int ancho = input.getWidth();
-        int pixel;
-        
-        int [][] imagenInt = new int[alto][ancho];
-        
-        for(int y=0; y<alto;y++){
-            for(int x=0;x<ancho;x++){
-                pixel=input.getRGB(x, y);
-                int rojo  = (pixel & 0x00ff0000) >> 16;
-                int verde = (pixel & 0x0000ff00) >> 8;
-                int azul  =  pixel & 0x000000ff;
-                
-                rojo = (rojo * contrast);
-                if(rojo>255){
-                    rojo=255;
-                }else if(rojo<0){
-                    rojo=0;
-                }
-                verde = (verde * contrast);
-                if(verde>255){
-                    verde=255;
-                }else if(verde<0){
-                    verde=0;
-                }
-                azul = (azul * contrast);
-                if(azul>255){
-                    azul=255;
-                }else if(azul<0){
-                    azul=0;
-                }
-                
-                Color color = new Color(rojo, verde, azul);
-                imagenInt[y][x] = color.getRGB();
-                    
-            }
-        }
-        
-        BufferedImage bufferedImage=convertirMatrizABuffered(imagenInt);
-        ExtendedImage IMAGE= new ExtendedImage(bufferedImage);
-        return IMAGE;
-    }
-    
-    public static ExtendedImage brightness(int brightness, BufferedImage input){
-        int alto = input.getHeight();
-        int ancho = input.getWidth();
-        int pixel;
-        
-        int [][] imagenInt = new int[alto][ancho];
-        
-        for(int y=0; y<alto;y++){
-            for(int x=0;x<ancho;x++){
-                pixel=input.getRGB(x, y);
-                int rojo  = (pixel & 0x00ff0000) >> 16;
-                int verde = (pixel & 0x0000ff00) >> 8;
-                int azul  =  pixel & 0x000000ff;
-                
-                rojo = (rojo + brightness);
-                if(rojo>255){
-                    rojo=255;
-                }else if(rojo<0){
-                    rojo=0;
-                }
-                verde = (verde + brightness);
-                if(verde>255){
-                    verde=255;
-                }else if(verde<0){
-                    verde=0;
-                }
-                azul = (azul + brightness);
-                if(azul>255){
-                    azul=255;
-                }else if(azul<0){
-                    azul=0;
-                }
-                
-                Color color = new Color(rojo, verde, azul);
-                imagenInt[y][x] = color.getRGB();
-                    
-            }
-        }
-        
-        BufferedImage bufferedImage=convertirMatrizABuffered(imagenInt);
-        ExtendedImage IMAGE= new ExtendedImage(bufferedImage);
-        return IMAGE;
-    }      
-    
-    public static void grayScale(BufferedImage input){
+    public static void grayScale(BufferedImage input, ImageFrameHistory history){
         int alto = input.getHeight();
         int ancho = input.getWidth();
         int pixel;
@@ -221,9 +317,14 @@ public class ImageProcessing {
         
             }  
         }
+        boolean[] flag = {true};
         BufferedImage bufferedImage=convertirMatrizABuffered(imagenInt);
-        ExtendedImage IMAGE= new ExtendedImage(bufferedImage);
-        return IMAGE;
+        FrameImagen frame = new FrameImagen(bufferedImage, history, flag);
+        
+        
+        if(flag[0]){
+            history.agregaFinal(frame);
+        }
     }
     
     
